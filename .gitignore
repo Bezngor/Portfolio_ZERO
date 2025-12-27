@@ -1,0 +1,19 @@
+# Ignore all files in root except specific ones
+/*
+
+# Allow specific directories
+!Travel Wallet Telegram Bot/
+
+# Allow git files
+!.gitignore
+!.git/
+
+# Ignore files that shouldn't be in repo
+Travel Wallet Telegram Bot/.env
+Travel Wallet Telegram Bot/venv/
+Travel Wallet Telegram Bot/venv_new/
+Travel Wallet Telegram Bot/*.db
+Travel Wallet Telegram Bot/*.sqlite
+Travel Wallet Telegram Bot/__pycache__/
+Travel Wallet Telegram Bot/*.pyc
+Travel Wallet Telegram Bot/*_backup.py
