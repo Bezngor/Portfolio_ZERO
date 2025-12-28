@@ -3,6 +3,7 @@
 
 # Allow specific directories
 !Travel Wallet Telegram Bot/
+!TextAgent/
 
 # Allow git files
 !.gitignore
