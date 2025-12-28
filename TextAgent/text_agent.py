@@ -11,17 +11,23 @@ class TextAgent:
     Поддерживает режим диалога с сохранением контекста.
     """
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = "https://api.proxyapi.ru/anthropic"):
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = "https://api.proxyapi.ru/anthropic", model: str = "claude-sonnet-4-5-20250929"):
         """
         Инициализация агента.
 
         Args:
-            api_key: API ключ Anthropic. Если не указан, берется из переменной ANTHROPIC_API_KEY
+            api_key: API ключ. Если не указан, берется из переменной PROXY_API_KEY
             base_url: Базовый URL для API (по умолчанию используется proxyapi.ru)
+            model: Модель для использования ("gpt-4.1-mini-2025-04-1" или "claude-sonnet-4-5-20250929")
         """
         self.api_key = api_key or os.getenv("PROXY_API_KEY")
         if not self.api_key:
-            raise ValueError("API ключ Anthropic не найден. Укажите его в конструкторе или переменной PROXY_API_KEY")
+            raise ValueError("API ключ не найден. Укажите его в конструкторе или переменной PROXY_API_KEY")
+
+        # Проверяем корректность модели
+        valid_models = ["gpt-4.1-mini-2025-04-1", "claude-sonnet-4-5-20250929"]
+        if model not in valid_models:
+            raise ValueError(f"Неверная модель. Доступные модели: {valid_models}")
 
         # Создаем клиент с указанным base_url
         self.client = Anthropic(
@@ -29,7 +35,7 @@ class TextAgent:
             base_url=base_url
         )
         self.messages: List[Dict[str, any]] = []
-        self.model = "claude-sonnet-4-5-20250929"
+        self.model = model
 
     def add_system_message(self, content: str) -> None:
         """
@@ -122,9 +128,12 @@ class TextAgent:
         """
         return self.messages.copy()
 
-    def print_history(self) -> None:
+    def print_history(self, model_name: str = "AI") -> None:
         """
         Вывести историю диалога в читаемом формате.
+
+        Args:
+            model_name: Отображаемое имя модели для ассистента
         """
         history = self.get_history()
 
@@ -147,7 +156,7 @@ class TextAgent:
                     print(f"   {content}")
 
             elif role == "assistant":
-                print(f"Claude #{i//2}:")
+                print(f"{model_name} #{i//2}:")
                 if isinstance(content, list) and content:
                     print(f"   {content[0]['text']}")
                 else:
@@ -169,17 +178,60 @@ class TextAgent:
             self.add_system_message(system_prompt)
 
 
+def select_model():
+    """
+    Предлагает пользователю выбрать модель для диалога.
+
+    Returns:
+        str: Выбранная модель
+    """
+    print("🤖 Выберите модель для диалога:")
+    print("1. Обычная модель (gpt-4.1-mini-2025-04-1) - быстрые ответы")
+    print("2. Думающая модель (claude-sonnet-4-5-20250929) - более качественные ответы")
+    print()
+
+    while True:
+        choice = input("Введите номер модели (1 или 2): ").strip()
+
+        if choice == "1":
+            return "gpt-4.1-mini-2025-04-1"
+        elif choice == "2":
+            return "claude-sonnet-4-5-20250929"
+        else:
+            print("❌ Пожалуйста, введите 1 или 2.")
+
+def get_model_display_name(model: str) -> str:
+    """
+    Возвращает отображаемое имя модели для интерфейса.
+
+    Args:
+        model: Техническое имя модели
+
+    Returns:
+        str: Отображаемое имя модели
+    """
+    if model == "gpt-4.1-mini-2025-04-1":
+        return "GPT-4.1 Mini"
+    elif model == "claude-sonnet-4-5-20250929":
+        return "Claude Sonnet 4.5"
+    else:
+        return model
+
 def chat_example():
     """
     Пример использования TextAgent для диалога.
     """
-    # Создаем агента
-    agent = TextAgent()  # API ключ берется из переменной ANTHROPIC_API_KEY
+    # Выбираем модель
+    selected_model = select_model()
+    model_name = get_model_display_name(selected_model)
+
+    # Создаем агента с выбранной моделью
+    agent = TextAgent(model=selected_model)
 
     # Начинаем чат с системным промптом
     agent.start_chat("Ты - полезный AI-ассистент, который отвечает на русском языке.")
 
-    print("🤖 Начат диалог с Claude. Для выхода введите 'exit', 'quit' или 'выход'.")
+    print(f"🤖 Начат диалог с {model_name}. Для выхода введите 'exit', 'quit' или 'выход'.")
     print("=" * 50)
 
     while True:
@@ -191,12 +243,12 @@ def chat_example():
             # Предлагаем показать историю
             show_history = input("Показать историю диалога? (y/n): ").strip().lower()
             if show_history in ['y', 'yes', 'да', 'д']:
-                agent.print_history()
+                agent.print_history(model_name)
 
             break
 
         if user_input.lower() in ['history', 'история', 'h']:
-            agent.print_history()
+            agent.print_history(model_name)
             continue
 
         if not user_input:
@@ -204,7 +256,7 @@ def chat_example():
 
         try:
             response = agent.generate_response(user_input)
-            print(f"🤖 Claude: {response}")
+            print(f"🤖 {model_name}: {response}")
             print("-" * 50)
 
         except Exception as e:
