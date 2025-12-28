@@ -11,7 +11,7 @@ class TextAgent:
     Поддерживает режим диалога с сохранением контекста.
     """
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = "https://api.proxyapi.ru/anthropic", model: str = "claude-sonnet-4-5-20250929"):
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = "https://api.proxyapi.ru/anthropic", model: str = "claude-3-5-haiku-20241022"):
         """
         Инициализация агента.
 
@@ -25,7 +25,7 @@ class TextAgent:
             raise ValueError("API ключ не найден. Укажите его в конструкторе или переменной PROXY_API_KEY")
 
         # Проверяем корректность модели
-        valid_models = ["gpt-5-mini-2025-08-07", "claude-sonnet-4-5-20250929"]
+        valid_models = ["claude-3-5-haiku-20241022", "claude-sonnet-4-5-20250929"]
         if model not in valid_models:
             raise ValueError(f"Неверная модель. Доступные модели: {valid_models}")
 
@@ -186,7 +186,7 @@ def select_model():
         str: Выбранная модель
     """
     print("🤖 Выберите модель для диалога:")
-    print("1. Обычная модель (gpt-5-mini-2025-08-07) - быстрые ответы")
+    print("1. Обычная модель (claude-3-5-haiku-20241022) - быстрые ответы")
     print("2. Думающая модель (claude-sonnet-4-5-20250929) - более качественные ответы")
     print()
 
@@ -194,7 +194,7 @@ def select_model():
         choice = input("Введите номер модели (1 или 2): ").strip()
 
         if choice == "1":
-            return "gpt-5-mini-2025-08-07"
+            return "claude-3-5-haiku-20241022"
         elif choice == "2":
             return "claude-sonnet-4-5-20250929"
         else:
@@ -210,8 +210,8 @@ def get_model_display_name(model: str) -> str:
     Returns:
         str: Отображаемое имя модели
     """
-    if model == "gpt-5-mini-2025-08-07":
-        return "GPT-5 Mini"
+    if model == "claude-3-5-haiku-20241022":
+        return "Claude 3.5 Haiku"
     elif model == "claude-sonnet-4-5-20250929":
         return "Claude Sonnet 4.5"
     else:
