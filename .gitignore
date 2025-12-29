@@ -18,3 +18,4 @@ Travel Wallet Telegram Bot/*.sqlite
 Travel Wallet Telegram Bot/__pycache__/
 Travel Wallet Telegram Bot/*.pyc
 Travel Wallet Telegram Bot/*_backup.py
+!Autodeploy/

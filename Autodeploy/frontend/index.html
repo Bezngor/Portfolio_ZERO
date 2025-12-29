@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Docker App - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐳 Flask Docker Application</h1>
+            <p class="subtitle">Мониторинг и управление контейнером</p>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label">Статус:</span>
+                <span id="status" class="status-badge">проверка...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Последнее обновление:</span>
+                <span id="lastUpdate">—</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Главная информация -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>📊 Информация о сервисе</h2>
+                    <button class="btn btn-small" onclick="loadHome()">Обновить</button>
+                </div>
+                <div class="card-body">
+                    <div id="homeData" class="data-display">
+                        <p class="loading">Загрузка...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Информация о контейнере -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>🖥️ Информация о контейнере</h2>
+                    <button class="btn btn-small" onclick="loadInfo()">Обновить</button>
+                </div>
+                <div class="card-body">
+                    <div id="infoData" class="data-display">
+                        <p class="loading">Загрузка...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Echo тест -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>💬 Echo Test</h2>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="text" id="echoInput" placeholder="Введите сообщение..." />
+                        <button class="btn" onclick="sendEcho()">Отправить</button>
+                    </div>
+                    <div id="echoResult" class="result-box"></div>
+                </div>
+            </div>
+
+            <!-- Калькулятор -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>🔢 Калькулятор</h2>
+                </div>
+                <div class="card-body">
+                    <div class="calculator">
+                        <div class="input-row">
+                            <input type="number" id="numA" placeholder="Число A" />
+                            <input type="number" id="numB" placeholder="Число B" />
+                        </div>
+                        <div class="button-row">
+                            <button class="btn btn-calc" onclick="calculate('multiply')">× Умножить</button>
+                            <button class="btn btn-calc" onclick="calculate('divide')">÷ Разделить</button>
+                            <button class="btn btn-calc" onclick="calculate('subtract')">− Вычесть</button>
+                        </div>
+                        <div id="calcResult" class="result-box"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Check -->
+        <div class="card full-width">
+            <div class="card-header">
+                <h2>❤️ Health Check</h2>
+                <button class="btn btn-small" onclick="checkHealth()">Проверить</button>
+            </div>
+            <div class="card-body">
+                <div id="healthData" class="data-display">
+                    <p class="loading">Нажмите "Проверить" для проверки состояния</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🐍 Flask + 🐳 Docker + 🌐 Web Interface</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
